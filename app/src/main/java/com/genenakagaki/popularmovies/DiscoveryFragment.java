@@ -39,6 +39,6 @@ public class DiscoveryFragment extends Fragment {
     }
 
     public void updateSortOrder() {
-        new FetchMovieTask(getActivity(), mGridView).execute();
+        new FetchMovieListTask(getActivity(), mGridView).execute();
     }
 }

@@ -1,14 +1,16 @@
 package com.genenakagaki.popularmovies;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.GridView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,89 +19,22 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.R.id.empty;
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 /**
- * Created by gene on 11/8/16.
+ * Created by gene on 11/11/16.
  */
 
-public class FetchMovieTask extends AsyncTask<Void, Void, String> {
+public class FetchMovieTask extends FetchJsonStringTask {
 
     private static final String LOG_TAG = FetchMovieTask.class.getSimpleName();
     private static final boolean D = BuildConfig.APP_DEBUG;
 
-    private Context mContext;
-    private GridView mGridView;
+    private String mMovieId;
+    private View mRootView;
 
-    public FetchMovieTask(Context context, GridView gridView) {
-        mContext = context;
-        mGridView = gridView;
-    }
-
-    @Override
-    protected String doInBackground(Void... params) {
-        if (D) Log.d(LOG_TAG, "doInBackground");
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        String movieJsonStr = null;
-
-        URL requestUrl = createRequestUrl();
-        if (requestUrl == null) {
-            if (D) Log.d(LOG_TAG, "requestUrl is null");
-            return null;
-        }
-
-        try {
-            // open connection
-            urlConnection = (HttpURLConnection) requestUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Read input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream == null) {
-                if (D) Log.d(LOG_TAG, "inputStream is null");
-                return null;
-            }
-
-            StringBuilder sBuilder = new StringBuilder();
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sBuilder.append(line + "\n");
-            }
-
-            if (sBuilder.length() == 0) {
-                if (D) Log.d(LOG_TAG, "inputStream is empty");
-                return null;
-            }
-
-            movieJsonStr = sBuilder.toString();
-
-        } catch (IOException e) {
-            if (D) Log.d(LOG_TAG, "Error reading input stream", e);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    if (D) Log.d(LOG_TAG, "Error closing stream", e);
-                }
-            }
-        }
-
-        if (D && movieJsonStr != null) Log.d(LOG_TAG, "url request result: " + movieJsonStr);
-        return movieJsonStr;
+    public FetchMovieTask(View rootView, String movieId) {
+        mMovieId = movieId;
+        mRootView = rootView;
     }
 
     @Override
@@ -111,44 +46,37 @@ public class FetchMovieTask extends AsyncTask<Void, Void, String> {
 
         if (D) Log.d(LOG_TAG, "onPostExecute: " + movieJsonString);
 
-        // create list of imageURLs
-        List<String> imageUrls = new ArrayList<>();
-
         try {
-            JSONObject json = new JSONObject(movieJsonString);
-            JSONArray results = json.getJSONArray("results");
+            JSONObject movie = new JSONObject(movieJsonString);
 
-            for (int i = 0; i < results.length(); i++) {
-                JSONObject result = results.getJSONObject(i);
-                imageUrls.add(result.getString("poster_path"));
-            }
+            String title       = movie.getString("title");
+            String posterPath  = movie.getString("poster_path");
+            String releaseDate = movie.getString("release_date").substring(0, 4);
+            String runtime     = movie.getString("runtime") + "min";
+            String rating      = movie.getString("vote_average") + "/10";
+            String plot        = movie.getString("overview");
+
+            ((TextView)mRootView.findViewById(R.id.movie_title_textview)).setText(title);
+            ((TextView)mRootView.findViewById(R.id.movie_date_textview)).setText(releaseDate);
+            ((TextView)mRootView.findViewById(R.id.movie_runtime_textview)).setText(runtime);
+            ((TextView)mRootView.findViewById(R.id.movie_rating_textview)).setText(rating);
+            ((TextView)mRootView.findViewById(R.id.movie_plot_textview)).setText(plot);
+
+            ImageView imageView = (ImageView) mRootView.findViewById(R.id.movie_poster_imageview);
+            Utils.setMoviePosterImage(mRootView.getContext(), imageView, posterPath);
 
         } catch (JSONException e) {
             if (D) Log.d(LOG_TAG, "Error while handling JSON string.", e);
         }
-
-        // update ImageAdapter
-        ImageAdapter imageAdapter = (ImageAdapter) mGridView.getAdapter();
-        imageAdapter.clear();
-        imageAdapter.addAll(imageUrls);
-
-        mGridView.invalidateViews();
     }
 
-    private URL createRequestUrl() {
+    @Override
+    public URL createRequestUrl() {
         // Create url request for themoviedb
         final String BASE_URL = "https://api.themoviedb.org/3/movie";
-        final String POPULAR_URL = "/popular";
-        final String RATING_URL = "/top_rated";
         final String API_PARAM = "api_key";
 
-        String preBuildUri;
-
-        if (Utils.isOrderedByPopularity(mContext)) {
-            preBuildUri = BASE_URL + POPULAR_URL;
-        } else {
-            preBuildUri = BASE_URL + RATING_URL;
-        }
+        String preBuildUri = BASE_URL + "/" + mMovieId;
 
         Uri uri = Uri.parse(preBuildUri).buildUpon()
                 .appendQueryParameter(API_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)

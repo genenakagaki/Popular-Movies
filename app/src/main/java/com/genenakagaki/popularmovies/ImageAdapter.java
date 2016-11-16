@@ -1,6 +1,7 @@
 package com.genenakagaki.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -25,21 +26,18 @@ public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
 
+    private List<String> mMovieIds;
     private List<String> mImageUrls;
 
     public ImageAdapter(Context context) {
         mContext = context;
+        mMovieIds = new ArrayList<>();
         mImageUrls = new ArrayList<>();
-
-        mImageUrls.add("/xfWac8MTYDxujaxgPVcRD9yZaul.jpg");
-        mImageUrls.add("/5N20rQURev5CNDcMjHVUZhpoCNC.jpg");
-        mImageUrls.add("/kqjL17yufvn9OVLyXYpvtyrFfak.jpg");
-        mImageUrls.add("/mLrQMqyZgLeP8FrT5LCobKAiqmK.jpg");
     }
 
     @Override
     public int getCount() {
-        return mImageUrls.size();
+        return mMovieIds.size();
     }
 
     @Override
@@ -53,33 +51,39 @@ public class ImageAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             imageView.setAdjustViewBounds(true);
-
         } else {
             imageView = (ImageView) convertView;
         }
 
-        final String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185";
+        Utils.setMoviePosterImage(mContext, imageView, mImageUrls.get(position));
 
-        Picasso.with(mContext).load(BASE_IMAGE_URL + mImageUrls.get(position)).into(imageView);
+        final String movieId = mMovieIds.get(position);
+        imageView.setOnClickListener(new ImageView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent detailIntent = new Intent(mContext, DetailActivity.class);
+                detailIntent.putExtra(DetailActivity.MOVIE_ID_EXTRA_KEY, movieId);
+                mContext.startActivity(detailIntent);
+            }
+        });
+
         return imageView;
     }
 
     public void clear() {
+        mMovieIds.clear();
         mImageUrls.clear();
     }
 
-    public void add(String imageUrl) {
+    public void add(String movieId, String imageUrl) {
+        mMovieIds.add(movieId);
         mImageUrls.add(imageUrl);
-    }
-
-    public void addAll(List<String> list) {
-        mImageUrls.addAll(list);
     }
 }
