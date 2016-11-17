@@ -1,3 +1,3 @@
 # Popular-Movies
-in local.properties:
-MyTheMovieDbApiKey="<themoviedb api key>";
+in local.properties:<br/>
+MyTheMovieDbApiKey="&gt;themoviedb api key&lt;";
