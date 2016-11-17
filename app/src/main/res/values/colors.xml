@@ -2,7 +2,9 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="gray">#888888</color>
+
+    <color name="dark_gray">#888888</color>
+    <color name="light_gray">#cccccc</color>
 
     <color name="movie_title_background">#009587</color>
     

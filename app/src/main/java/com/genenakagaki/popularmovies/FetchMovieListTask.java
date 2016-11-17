@@ -22,7 +22,7 @@ import java.net.URL;
  * Created by gene on 11/8/16.
  */
 
-public class FetchMovieListTask extends AsyncTask<Void, Void, String> {
+public class FetchMovieListTask extends FetchJsonStringTask {
 
     private static final String LOG_TAG = FetchMovieListTask.class.getSimpleName();
     private static final boolean D = BuildConfig.APP_DEBUG;
@@ -33,67 +33,6 @@ public class FetchMovieListTask extends AsyncTask<Void, Void, String> {
     public FetchMovieListTask(Context context, GridView gridView) {
         mContext = context;
         mGridView = gridView;
-    }
-
-    @Override
-    protected String doInBackground(Void... params) {
-        if (D) Log.d(LOG_TAG, "doInBackground");
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        String movieJsonStr = null;
-
-        URL requestUrl = createRequestUrl();
-        if (requestUrl == null) {
-            if (D) Log.d(LOG_TAG, "requestUrl is null");
-            return null;
-        }
-
-        try {
-            // open connection
-            urlConnection = (HttpURLConnection) requestUrl.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.connect();
-
-            // Read input stream into a String
-            InputStream inputStream = urlConnection.getInputStream();
-            if (inputStream == null) {
-                if (D) Log.d(LOG_TAG, "inputStream is null");
-                return null;
-            }
-
-            StringBuilder sBuilder = new StringBuilder();
-
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sBuilder.append(line + "\n");
-            }
-
-            if (sBuilder.length() == 0) {
-                if (D) Log.d(LOG_TAG, "inputStream is empty");
-                return null;
-            }
-
-            movieJsonStr = sBuilder.toString();
-
-        } catch (IOException e) {
-            if (D) Log.d(LOG_TAG, "Error reading input stream", e);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    if (D) Log.d(LOG_TAG, "Error closing stream", e);
-                }
-            }
-        }
-
-        return movieJsonStr;
     }
 
     @Override
@@ -124,7 +63,8 @@ public class FetchMovieListTask extends AsyncTask<Void, Void, String> {
         mGridView.invalidateViews();
     }
 
-    private URL createRequestUrl() {
+    @Override
+    public URL createRequestUrl() {
         // Create url request for themoviedb
         final String BASE_URL = "https://api.themoviedb.org/3/movie";
         final String POPULAR_URL = "/popular";

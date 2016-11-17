@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.GridView;
 
 import static android.R.attr.fragment;
+import static android.R.attr.matchOrder;
 import static com.genenakagaki.popularmovies.Utils.isOrderedByPopularity;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +42,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (mIsOrderedByPopularity != isOrderedByPopularity) {
             mIsOrderedByPopularity = isOrderedByPopularity;
+
+            if (mIsOrderedByPopularity) {
+                getSupportActionBar().setTitle(getString(R.string.activity_main_popular_label));
+            } else {
+                getSupportActionBar().setTitle(getString(R.string.activity_main_top_rated_label));
+            }
 
             DiscoveryFragment discoveryFragment =
                     (DiscoveryFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_discovery);

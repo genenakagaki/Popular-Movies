@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 
 /**
@@ -56,6 +57,7 @@ public class DetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         new FetchMovieTask(rootView, mMovieId).execute();
+        new FetchTrailerListTask(rootView, mMovieId).execute();
 
         return rootView;
     }
