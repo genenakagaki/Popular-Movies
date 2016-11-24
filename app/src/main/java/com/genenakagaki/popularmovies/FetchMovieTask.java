@@ -65,6 +65,8 @@ public class FetchMovieTask extends FetchJsonStringTask {
             ImageView imageView = (ImageView) mRootView.findViewById(R.id.movie_poster_imageview);
             Utils.setMoviePosterImage(mRootView.getContext(), imageView, posterPath);
 
+            new FetchReviewListTask(mRootView, mMovieId, title).execute();
+
         } catch (JSONException e) {
             if (D) Log.d(LOG_TAG, "Error while handling JSON string.", e);
         }

@@ -86,6 +86,7 @@
             android:layout_marginBottom="8dp"
             android:textSize="16sp"/>
 
+        <!-- Trailers -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -97,13 +98,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/trailers_label"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="8dp"/>
 
         <LinearLayout
             android:id="@+id/trailer_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp">
+
+        </LinearLayout>
+
+        <!-- Reviews -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dark_gray"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <LinearLayout
+            android:id="@+id/review_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
