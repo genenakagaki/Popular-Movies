@@ -16,9 +16,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.genenakagaki.popularmovies.BuildConfig;
+import com.genenakagaki.popularmovies.MainActivity;
 import com.genenakagaki.popularmovies.R;
 import com.genenakagaki.popularmovies.Utils;
 import com.genenakagaki.popularmovies.data.MovieContract;
+import com.genenakagaki.popularmovies.discovery.DiscoveryFragment;
 
 import java.util.Calendar;
 
@@ -69,7 +71,8 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -120,6 +123,24 @@ public class DetailFragment extends Fragment {
                     favoriteButton.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.dark_gray));
 
                     mIsFavorite = true;
+                }
+
+                if (getActivity() instanceof MainActivity) {
+                    if (D) Log.d(LOG_TAG, "Device is tablet.");
+
+                    String sortOrder = Utils.getSortOrder(getActivity());
+                    String favoriteSortOrder = getActivity().getString(R.string.pref_sort_order_value_favorite);
+
+                    if (sortOrder.equals(favoriteSortOrder)) {
+                        if (D) Log.d(LOG_TAG, "Discovery page is showing favorite movies.");
+                        DiscoveryFragment discoveryFragment =
+                                (DiscoveryFragment) getActivity().getSupportFragmentManager()
+                                        .findFragmentById(R.id.fragment_discovery);
+                        if (discoveryFragment != null) {
+                            discoveryFragment.updateSortOrder();
+                        }
+                    }
+
                 }
             }
         });

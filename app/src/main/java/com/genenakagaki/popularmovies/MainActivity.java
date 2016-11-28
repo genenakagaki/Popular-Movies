@@ -7,16 +7,24 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.genenakagaki.popularmovies.detail.DetailActivity;
+import com.genenakagaki.popularmovies.detail.DetailFragment;
 import com.genenakagaki.popularmovies.discovery.DiscoveryFragment;
+import com.genenakagaki.popularmovies.discovery.FetchMovieListTask;
 import com.genenakagaki.popularmovies.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements DiscoveryFragment.Callback,
+                   FetchMovieListTask.Callback {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final boolean D = BuildConfig.APP_DEBUG;
 
     private String mSortOrder;
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        View detailContainer = findViewById(R.id.fragment_detail_container);
+        if (detailContainer == null) {
+            mTwoPane = false;
+            if (D) Log.d(LOG_TAG, "Device is mobile.");
+        } else {
+            mTwoPane = true;
+            if (D) Log.d(LOG_TAG, "Device is tablet.");
+        }
     }
 
     @Override
@@ -73,5 +90,50 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(String movieId, String posterPath) {
+        if (mTwoPane) {
+            // replace the detail fragment with the selected movie
+            DetailFragment detailFragment = DetailFragment.newInstance(
+                    movieId,
+                    posterPath,
+                    Utils.isFavoriteMovie(this, movieId));
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_detail_container, detailFragment)
+                    .commit();
+        } else {
+            // start detail activity
+            Intent detailIntent = new Intent(this, DetailActivity.class);
+            detailIntent.putExtra(DetailActivity.MOVIE_ID_EXTRA_KEY, movieId);
+            detailIntent.putExtra(DetailActivity.POSTER_PATH_EXTRA_KEY, posterPath);
+            startActivity(detailIntent);
+        }
+    }
+
+    @Override
+    public void onFetchMovieListTaskFinished(String movieId, String posterPath) {
+        if (D) Log.d(LOG_TAG, "onFetchMovieListTaskFinished");
+
+        if (mTwoPane) {
+            DetailFragment detailFragment = (DetailFragment)getSupportFragmentManager()
+                    .findFragmentById(R.id.fragment_detail_container);
+
+            if (detailFragment == null) {
+                // if detail pane is empty, show the detail of the first movie
+
+                detailFragment = DetailFragment.newInstance(
+                        movieId,
+                        posterPath,
+                        Utils.isFavoriteMovie(this, movieId));
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_detail_container, detailFragment)
+                        .commit();
+            }
+
+        }
     }
 }

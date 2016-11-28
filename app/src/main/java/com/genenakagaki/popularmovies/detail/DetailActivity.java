@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.genenakagaki.popularmovies.BuildConfig;
 import com.genenakagaki.popularmovies.R;
+import com.genenakagaki.popularmovies.Utils;
 import com.genenakagaki.popularmovies.data.MovieContract;
 
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
@@ -27,19 +28,7 @@ public class DetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             String movieId = getIntent().getStringExtra(MOVIE_ID_EXTRA_KEY);
             String posterPath = getIntent().getStringExtra(POSTER_PATH_EXTRA_KEY);
-
-            boolean isFavorite = false;
-            Cursor cursor = getContentResolver().query(
-                    MovieContract.FavoriteEntry.CONTENT_URI,
-                    MovieContract.FavoriteEntry.PROJECTION,
-                    MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
-                    new String[] {movieId},
-                    null
-            );
-
-            if (cursor != null && cursor.moveToFirst()) {
-                isFavorite = true;
-            }
+            boolean isFavorite = Utils.isFavoriteMovie(this, movieId);
 
             if (D) Log.d(LOG_TAG, "isFavorite: " + isFavorite);
 

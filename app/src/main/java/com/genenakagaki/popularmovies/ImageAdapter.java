@@ -63,20 +63,19 @@ public class ImageAdapter extends BaseAdapter {
 
         Utils.setMoviePosterImage(mContext, imageView, mImageUrls.get(position));
 
-        final String movieId = mMovieIds.get(position);
-        final String posterPath = mImageUrls.get(position);
-
-        imageView.setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent detailIntent = new Intent(mContext, DetailActivity.class);
-                detailIntent.putExtra(DetailActivity.MOVIE_ID_EXTRA_KEY, movieId);
-                detailIntent.putExtra(DetailActivity.POSTER_PATH_EXTRA_KEY, posterPath);
-                mContext.startActivity(detailIntent);
-            }
-        });
-
         return imageView;
+    }
+
+    public String getMovieId(int position) {
+        return mMovieIds.get(position);
+    }
+
+    public String getImageUrl(int position) {
+        return mImageUrls.get(position);
+    }
+
+    public boolean isEmpty() {
+        return mMovieIds.size() <= 0;
     }
 
     public void clear() {

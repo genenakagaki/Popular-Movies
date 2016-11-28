@@ -9,7 +9,6 @@ import com.genenakagaki.popularmovies.BuildConfig;
 import com.genenakagaki.popularmovies.FetchJsonStringTask;
 import com.genenakagaki.popularmovies.ImageAdapter;
 import com.genenakagaki.popularmovies.R;
-import com.genenakagaki.popularmovies.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +29,10 @@ public class FetchMovieListTask extends FetchJsonStringTask {
     private Context mContext;
     private GridView mGridView;
     private String mSortOrder;
+
+    public interface Callback {
+        void onFetchMovieListTaskFinished(String movieId, String posterPath);
+    }
 
     public FetchMovieListTask(Context context, GridView gridView, String sortOrder) {
         mContext = context;
@@ -63,6 +66,12 @@ public class FetchMovieListTask extends FetchJsonStringTask {
         }
 
         mGridView.invalidateViews();
+
+        if (!imageAdapter.isEmpty()) {
+            ((Callback)mContext).onFetchMovieListTaskFinished(
+                    imageAdapter.getMovieId(0),
+                    imageAdapter.getImageUrl(0));
+        }
     }
 
     @Override

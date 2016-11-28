@@ -2,11 +2,13 @@ package com.genenakagaki.popularmovies;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.widget.ImageView;
 
+import com.genenakagaki.popularmovies.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
@@ -26,6 +28,20 @@ public class Utils {
         return PreferenceManager
                 .getDefaultSharedPreferences(context)
                 .getString(context.getString(R.string.pref_sort_order_key), "");
+    }
+
+    public static boolean isFavoriteMovie(Context context, String movieId) {
+        Cursor cursor = context.getContentResolver().query(
+                MovieContract.FavoriteEntry.CONTENT_URI,
+                MovieContract.FavoriteEntry.PROJECTION,
+                MovieContract.FavoriteEntry.COLUMN_MOVIE_ID + " = ?",
+                new String[] {movieId},
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) return true;
+
+        return false;
     }
 
     public static void setMoviePosterImage(Context context, ImageView imageView, String posterPath) {
