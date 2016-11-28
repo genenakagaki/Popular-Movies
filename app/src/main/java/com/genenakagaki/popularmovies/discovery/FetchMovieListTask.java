@@ -1,20 +1,20 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.discovery;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.GridView;
+
+import com.genenakagaki.popularmovies.BuildConfig;
+import com.genenakagaki.popularmovies.FetchJsonStringTask;
+import com.genenakagaki.popularmovies.ImageAdapter;
+import com.genenakagaki.popularmovies.R;
+import com.genenakagaki.popularmovies.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -29,10 +29,12 @@ public class FetchMovieListTask extends FetchJsonStringTask {
 
     private Context mContext;
     private GridView mGridView;
+    private String mSortOrder;
 
-    public FetchMovieListTask(Context context, GridView gridView) {
+    public FetchMovieListTask(Context context, GridView gridView, String sortOrder) {
         mContext = context;
         mGridView = gridView;
+        mSortOrder = sortOrder;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class FetchMovieListTask extends FetchJsonStringTask {
 
         String preBuildUri;
 
-        if (Utils.isOrderedByPopularity(mContext)) {
+        if (mSortOrder.equals(mContext.getString(R.string.pref_sort_order_value_popularity))) {
             preBuildUri = BASE_URL + POPULAR_URL;
         } else {
             preBuildUri = BASE_URL + RATING_URL;

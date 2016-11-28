@@ -1,10 +1,12 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.settings;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+
+import com.genenakagaki.popularmovies.R;
 
 /**
  * Created by gene on 11/9/16.

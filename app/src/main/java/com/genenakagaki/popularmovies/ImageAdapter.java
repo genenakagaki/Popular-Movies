@@ -2,15 +2,14 @@ package com.genenakagaki.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.Log;
+import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.genenakagaki.popularmovies.data.MovieContract;
+import com.genenakagaki.popularmovies.detail.DetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +64,14 @@ public class ImageAdapter extends BaseAdapter {
         Utils.setMoviePosterImage(mContext, imageView, mImageUrls.get(position));
 
         final String movieId = mMovieIds.get(position);
+        final String posterPath = mImageUrls.get(position);
+
         imageView.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent detailIntent = new Intent(mContext, DetailActivity.class);
                 detailIntent.putExtra(DetailActivity.MOVIE_ID_EXTRA_KEY, movieId);
+                detailIntent.putExtra(DetailActivity.POSTER_PATH_EXTRA_KEY, posterPath);
                 mContext.startActivity(detailIntent);
             }
         });
@@ -85,5 +87,15 @@ public class ImageAdapter extends BaseAdapter {
     public void add(String movieId, String imageUrl) {
         mMovieIds.add(movieId);
         mImageUrls.add(imageUrl);
+    }
+
+    public void add(Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String movieId = cursor.getString(MovieContract.FavoriteEntry.INDEX_MOVIE_ID);
+                String imageUrl = cursor.getString(MovieContract.FavoriteEntry.INDEX_POSTER_PATH);
+                add(movieId, imageUrl);
+            } while (cursor.moveToNext());
+        }
     }
 }

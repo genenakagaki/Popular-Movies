@@ -1,8 +1,10 @@
 package com.genenakagaki.popularmovies;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -20,20 +22,18 @@ public class Utils {
 
     private static final String BASE_MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w185";
 
-    public static boolean isOrderedByPopularity(Context context) {
-        String sortOrder = PreferenceManager
+    public static String getSortOrder(Context context) {
+        return PreferenceManager
                 .getDefaultSharedPreferences(context)
-                .getString(
-                        context.getString(R.string.pref_sort_order_key),
-                        "");
-
-        if (D) Log.d(LOG_TAG, "isOrderedByPopularity\n"
-                + "   sortOrder = " + sortOrder);
-
-        return sortOrder.equals(context.getString(R.string.pref_sort_order_value_popularity));
+                .getString(context.getString(R.string.pref_sort_order_key), "");
     }
 
     public static void setMoviePosterImage(Context context, ImageView imageView, String posterPath) {
         Picasso.with(context).load(BASE_MOVIE_POSTER_URL + posterPath).into(imageView);
+    }
+
+    public static float convertToPx(Context context, int dp) {
+        Resources r = context.getResources();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics());
     }
 }

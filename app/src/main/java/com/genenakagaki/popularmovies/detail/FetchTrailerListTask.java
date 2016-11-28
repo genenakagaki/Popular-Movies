@@ -1,4 +1,4 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.detail;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,10 +8,14 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.genenakagaki.popularmovies.BuildConfig;
+import com.genenakagaki.popularmovies.FetchJsonStringTask;
+import com.genenakagaki.popularmovies.R;
+import com.genenakagaki.popularmovies.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,22 +25,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Created by gene on 11/22/16.
+ * Created by gene on 11/16/16.
  */
 
-public class FetchReviewListTask extends FetchJsonStringTask {
+public class FetchTrailerListTask extends FetchJsonStringTask {
 
-    private static final String LOG_TAG = FetchReviewListTask.class.getSimpleName();
+    private static final String LOG_TAG = FetchTrailerListTask.class.getSimpleName();
     private static final boolean D = BuildConfig.APP_DEBUG;
 
-    private String mMovieId;
     private View mRootView;
-    private String mMovieTitle;
+    private String mMovieId;
 
-    public FetchReviewListTask(View rootView, String movieId, String movieTitle) {
+    public FetchTrailerListTask(View rootView, String movieId) {
         mRootView = rootView;
         mMovieId = movieId;
-        mMovieTitle = movieTitle;
     }
 
     @Override
@@ -48,9 +50,11 @@ public class FetchReviewListTask extends FetchJsonStringTask {
 
         if (D) Log.d(LOG_TAG, "onPostExecute: " + movieJsonString);
 
-        LinearLayout reviewList = (LinearLayout)mRootView.findViewById(R.id.review_list);
+        LinearLayout trailerList = (LinearLayout)mRootView.findViewById(R.id.trailer_list);
 
         final Context context = mRootView.getContext();
+
+        final String VIDEO_BASE_URL = "https://www.youtube.com/watch?v=";
 
         try {
             JSONObject json = new JSONObject(movieJsonString);
@@ -59,32 +63,35 @@ public class FetchReviewListTask extends FetchJsonStringTask {
             for (int i = 0; i < results.length(); i++) {
                 JSONObject result = results.getJSONObject(i);
 
-                final String author  = result.getString("author");
-                final String content = result.getString("content");
+                final String url = VIDEO_BASE_URL + result.getString("key");
+                String title = result.getString("name");
 
-                View reviewView = LayoutInflater
+                View trailerView = LayoutInflater
                         .from(context)
-                        .inflate(R.layout.list_item_review, reviewList, false);
+                        .inflate(R.layout.list_item_trailer, trailerList, false);
 
-                TextView reviewAuthor = (TextView) reviewView.findViewById(R.id.review_author_textview);
-                reviewAuthor.setText(author);
-
-                Button readButton = (Button) reviewView.findViewById(R.id.read_button);
-
-                readButton.setOnClickListener(new View.OnClickListener() {
+                ImageButton playButton = (ImageButton)trailerView.findViewById(R.id.trailer_play_button);
+                playButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Context context = mRootView.getContext();
-                        Intent reviewIntent = new Intent(context, ReviewActivity.class);
-                        reviewIntent.putExtra(ReviewActivity.MOVIE_TITLE_EXTRA_KEY, mMovieTitle);
-                        reviewIntent.putExtra(ReviewActivity.REVIEW_AUTHOR_EXTRA_KEY, author);
-                        reviewIntent.putExtra(ReviewActivity.REVIEW_CONTENT_EXTRA_KEY, content);
-                        context.startActivity(reviewIntent);
+                        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                     }
                 });
 
-                reviewList.addView(reviewView);
-                reviewList.addView(createHorizontalLineView());
+                TextView trailerTitle = (TextView)trailerView.findViewById(R.id.trailer_title);
+                trailerTitle.setText(title);
+
+                trailerList.addView(trailerView);
+                trailerList.addView(createHorizontalLineView());
+            }
+
+            if (results.length() == 0) {
+                int padding = (int) Utils.convertToPx(context, 8);
+
+                TextView textView = new TextView(context);
+                textView.setText(context.getString(R.string.detail_no_trailer_label));
+                textView.setPadding(padding, 0, 0, padding);
+                trailerList.addView(textView);
             }
 
         } catch (JSONException e) {
@@ -98,7 +105,7 @@ public class FetchReviewListTask extends FetchJsonStringTask {
         final String BASE_URL = "https://api.themoviedb.org/3/movie";
         final String API_PARAM = "api_key";
 
-        String preBuildUri = BASE_URL + "/" + mMovieId + "/reviews";
+        String preBuildUri = BASE_URL + "/" + mMovieId + "/videos";
 
         Uri uri = Uri.parse(preBuildUri).buildUpon()
                 .appendQueryParameter(API_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)

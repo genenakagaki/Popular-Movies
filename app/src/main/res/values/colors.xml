@@ -7,6 +7,7 @@
     <color name="light_gray">#cccccc</color>
 
     <color name="movie_title_background">#009587</color>
+    <color name="favorite_button_background">#86E4DB</color>
     
     
     <color name="colorPrimary">#3F51B5</color>

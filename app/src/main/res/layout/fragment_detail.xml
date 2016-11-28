@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.genenakagaki.popularmovies.DetailFragment">
+    tools:context="com.genenakagaki.popularmovies.detail.DetailFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +14,10 @@
         <TextView
             android:id="@+id/movie_title_textview"
             android:layout_width="match_parent"
-            android:layout_height="102dp"
+            android:layout_height="wrap_content"
             android:elevation="10dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:paddingLeft="16dp"
             android:gravity="center_vertical"
             android:textSize="34sp"
@@ -67,10 +69,11 @@
                     android:id="@+id/favorite_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/favorite_button_label"
                     android:textAllCaps="true"
-                    android:background="#86E4DB"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:text="@string/detail_favorite_button"
+                    android:background="@color/favorite_button_background"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -97,7 +100,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/trailers_label"
+            android:text="@string/detail_trailers_label"
             android:textSize="20sp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -120,6 +123,15 @@
             android:background="@color/dark_gray"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_reviews_label"
+            android:textSize="20sp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"/>
 
         <LinearLayout
             android:id="@+id/review_list"

@@ -1,10 +1,11 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import static com.genenakagaki.popularmovies.DetailActivity.MOVIE_ID_EXTRA_KEY;
+import com.genenakagaki.popularmovies.BuildConfig;
+import com.genenakagaki.popularmovies.R;
 
 /**
  * Created by gene on 11/23/16.

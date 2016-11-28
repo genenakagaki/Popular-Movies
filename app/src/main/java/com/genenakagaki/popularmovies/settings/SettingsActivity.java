@@ -1,8 +1,9 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.settings;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import com.genenakagaki.popularmovies.settings.SettingsFragment;
 
 /**
  * Created by gene on 11/9/16.

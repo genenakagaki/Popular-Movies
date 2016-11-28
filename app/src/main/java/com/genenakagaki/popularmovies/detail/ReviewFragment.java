@@ -1,4 +1,4 @@
-package com.genenakagaki.popularmovies;
+package com.genenakagaki.popularmovies.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.genenakagaki.popularmovies.BuildConfig;
+import com.genenakagaki.popularmovies.R;
 
 /**
  * Created by gene on 11/23/16.

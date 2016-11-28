@@ -1,19 +1,25 @@
 <resources>
+    <string name="content_authority">com.genenakagaki.popularmovies.app</string>
+
     <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
 
     <string name="activity_main_popular_label">Popular Movies</string>
     <string name="activity_main_top_rated_label">Top Rated Movies</string>
+    <string name="activity_main_favorite_label">Favorite Movies</string>
 
     <!-- ========================================
             Detail
     ======================================== -->
     <string name="activity_detail_label">Movie Detail</string>
 
-    <string name="favorite_button_label">Mark as\nfavorite</string>
-    <string name="trailers_label">Trailers:</string>
-    <string name="reviews_label">Reviews:</string>
-    <string name="read_button_label">Read Review</string>
+    <string name="detail_favorite_button">Mark as\nfavorite</string>
+    <string name="detail_unfavorite_button">Unfavorite</string>
+    <string name="detail_trailers_label">Trailers:</string>
+    <string name="detail_no_trailer_label">There are currently no trailers.</string>
+    <string name="detail_reviews_label">Reviews:</string>
+    <string name="detail_read_button">Read Review</string>
+    <string name="detail_no_review_label">There are currently no reviews.</string>
 
     <!-- ========================================
             Review
@@ -29,8 +35,10 @@
     <string name="pref_sort_order_title">Sort order</string>
     <string name="pref_sort_order_key">sort_order_key</string>
     <string name="pref_sort_order_label_popularity">Popularity</string>
-    <string name="pref_sort_order_label_rating">Rating</string>
     <string name="pref_sort_order_value_popularity">popularity</string>
+    <string name="pref_sort_order_label_rating">Rating</string>
     <string name="pref_sort_order_value_rating">rating</string>
+    <string name="pref_sort_order_label_favorite">Favorite</string>
+    <string name="pref_sort_order_value_favorite">favorite</string>
 
 </resources>

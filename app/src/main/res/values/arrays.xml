@@ -4,10 +4,12 @@
     <string-array name="pref_sort_order_entries">
         <item>@string/pref_sort_order_label_popularity</item>
         <item>@string/pref_sort_order_label_rating</item>
+        <item>@string/pref_sort_order_label_favorite</item>
     </string-array>
 
     <string-array name="pref_sort_order_entryvalues">
         <item>@string/pref_sort_order_value_popularity</item>
         <item>@string/pref_sort_order_value_rating</item>
+        <item>@string/pref_sort_order_value_favorite</item>
     </string-array>
 </resources>

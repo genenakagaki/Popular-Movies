@@ -17,4 +17,17 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="DetailFavoriteButton">
+        <item name="android:text">@string/detail_favorite_button</item>
+        <item name="android:background">#86E4DB</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="DetailUnfavoriteButton">
+        <item name="android:text">@string/detail_unfavorite_button</item>
+        <item name="android:background">@color/dark_gray</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
 </resources>
